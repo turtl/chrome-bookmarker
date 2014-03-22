@@ -1,5 +1,8 @@
-(function() {
-	console.log('HEYYY');
+// run the scrape
+var do_bookmark	=	function(options)
+{
+	options || (options = {});
+
 	var meta	=	document.getElementsByTagName('meta');
 	var desc	=	false;
 	var image	=	false;
@@ -84,15 +87,7 @@
 			desc: desc
 		};
 
-		if(self && self.port)
-		{
-			self.port.emit('scraped', send);
-		}
-		else if(chrome && chrome.runtime)
-		{
-			chrome.runtime.sendMessage({type: 'bookmark-scrape', data: send});
-		}
-
+		if(options.complete) options.complete(send);
 	};
 
 	if(og_image)
@@ -101,7 +96,7 @@
 		var img			=	new Image();
 		var loaded		=	false;
 		var cancelled	=	false;	
-		img.onload = function() {
+		img.onload		=	function() {
 			// we've been axed (probably took too long to load). do nothing
 			if(cancelled) return false;
 			loaded	=	true;
@@ -112,8 +107,8 @@
 				do_check_images();
 			}
 			finish();
-		}.bind(this);
-		img.url	=	og_image;
+		};
+		img.src	=	og_image;
 
 		// if loading the image takes longer than a few seconds, fuck it, check the
 		// images on the page
@@ -123,7 +118,7 @@
 			cancelled	=	true;
 			do_check_images();
 			finish();
-		}, 2500);
+		}, 2000);
 	}
 	else
 	{
@@ -131,4 +126,30 @@
 		do_check_images();
 		finish();
 	}
-})();
+};
+
+// listen for commands from ze extenstion
+if(self && self.port)
+{
+	self.port.on('bookmark', function(tag) {
+		do_bookmark({
+			complete: function(data) {
+				self.port.emit('bookmark-scrape', data);
+			}
+		});
+	});
+}
+else if(chrome && chrome.runtime)
+{
+	chrome.runtime.onConnect.addListener(function(port) {
+		port.onMessage.addListener(function(msg) {
+			if(msg.cmd != 'bookmark') return false;
+			do_bookmark({
+				complete: function(data) {
+					port.postMessage({type: 'bookmark-scrape', data: data});
+				}
+			});
+		});
+	});
+}
+

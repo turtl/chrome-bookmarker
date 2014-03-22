@@ -14,8 +14,26 @@ var ext	=	{
 	 */
 	setup: function()
 	{
-		// if we're not paired with the desktop app, the default panel will be
-		// for pairing, otherwise show the "connecting to app" panel
+		// TODO: setup pairing interface
+	},
+
+	/**
+	 * run the bookmarker
+	 */
+	bookmark: function()
+	{
+		ext.bookmarker.scrape({
+			complete: function(data) {
+				ext.comm.send('bookmark', data, {
+					success: function(res) {
+						console.log('res: ', res);
+					},
+					error: function(err) {
+						console.error('error bookmarking: ', err);
+					}
+				});
+			}
+		});
 	}
 };
 
@@ -23,7 +41,7 @@ ext.setup();
 
 // listen for commands!
 chrome.browserAction.onClicked.addListener(function() {
-	console.log('SHIIIT');
+	ext.bookmark();
 });
 
 // determine what kind of run we're doing

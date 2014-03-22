@@ -1,4 +1,4 @@
-ext.bookmark	=	{
+ext.bookmarker	=	{
 	get_content_type: function(url, finishcb)
 	{
 		if(url.match(/^https?:/))
@@ -30,63 +30,58 @@ ext.bookmark	=	{
 		}
 	},
 
-	open: function(container, inject, options)
+	scrape: function(options)
 	{
 		options || (options = {});
 
-		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-			var tab		=	tabs[0];
-			var type	=	'';
-
-			var do_open	=	function(tabdata)
+		var tab		=	null;
+		var type	=	'';
+		var do_bookmark	=	function(data)
+		{
+			var text	=	'';
+			if(data.image && data.image != '')
 			{
-				var text	=	'';
-				if(tabdata.image && tabdata.image != '')
-				{
-					text	+=	'![image]('+tabdata.image+')  \n';
-				}
-				else if(tabdata.desc)
-				{
-					text	+=	tabdata.desc;
-				}
-				var linkdata	=	{
-					title: type == 'image' ? '' : tab.title,
-					url: tab.url,
-					type: type,
-					text: text
-				};
-
-				ext.panel.open(container, 'BookmarkController', {
-					inject: inject,
-					linkdata: linkdata
-				}, {
-					width: 750
-				});
+				text	+=	'![image]('+data.image+')  \n';
+			}
+			else if(data.desc)
+			{
+				text	+=	data.desc;
+			}
+			var linkdata	=	{
+				title: type == 'image' ? '' : tab.title,
+				url: tab.url,
+				type: type,
+				text: text
 			};
 
+			if(options.complete) options.complete(linkdata);
+		};
+
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+			tab	=	tabs[0];
 			if(tab.url.match(/^chrome/))
 			{
 				type	=	'link';
-				do_open({image: false});
+				do_bookmark({image: false});
 			}
 			else
 			{
-				ext.bookmark.get_content_type(tab.url, function(content_type) {
+				ext.bookmarker.get_content_type(tab.url, function(content_type) {
 					type	=	content_type.match(/^image/) ? 'image' : 'link';
 					if(type == 'image')
 					{
-						do_open({});
+						do_bookmark({});
 					}
 					else
 					{
-						chrome.runtime.onMessage.addListener(function(req, sender) {
-							if(req.type == 'bookmark-scrape')
-							{
-								(function() { do_open(req.data); }).delay(0, this);
-								chrome.runtime.onMessage.removeListener(arguments.callee);
-							}
+						console.log('port: send');
+						var port	=	chrome.tabs.connect(tabs[0].id, {name: 'bookmarker'});
+						port.postMessage({cmd: 'bookmark'})
+						port.onMessage.addListener(function(response) {
+							console.log('port: recv');
+							if(response.type != 'bookmark-scrape') return false;
+							setTimeout(function() { do_bookmark(response.data); }, 0);
 						});
-						chrome.tabs.executeScript(null, {file: 'data/bookmark.scrape.js'});
 					}
 				});
 			}

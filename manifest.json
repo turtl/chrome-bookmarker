@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 
 	"name": "Turtl",
-	"description": "A client-side encrypted file and note storage app.",
+	"description": "A bookmarking utility for the Turtl app (https://turtl.it)",
 	"version": "0.1.0",
 	"icons": {
 		"16": "data/images/favicon.png",
@@ -11,7 +11,9 @@
 	"minimum_chrome_version": "28.0",
 
 	"permissions": [
-		"tabs"
+		"tabs",
+		"http://*/*",
+		"https://*/*"
 	],
 
 	"content_scripts": [{
@@ -22,7 +24,9 @@
 	"background": {
 		"scripts": [
 			"util.js",
-			"main.js"
+			"main.js",
+			"comm.js",
+			"bookmark.js"
 		],
 		"persistent": false
 	},
