@@ -1,0 +1,42 @@
+{
+	"manifest_version": 2,
+
+	"name": "Turtl",
+	"description": "A client-side encrypted file and note storage app.",
+	"version": "0.1.0",
+	"icons": {
+		"16": "data/images/favicon.png",
+		"128": "data/images/favicon.128.png"
+	},
+	"minimum_chrome_version": "28.0",
+
+	"permissions": [
+		"tabs"
+	],
+
+	"content_scripts": [{
+		"matches": ["<all_urls>"],
+		"js": [ "data/bookmark.scrape.js" ]
+	}],
+
+	"background": {
+		"scripts": [
+			"util.js",
+			"main.js"
+		],
+		"persistent": false
+	},
+
+	"browser_action": {
+		"default_icon": "data/images/favicon.19.png",
+		"default_title": "Bookmark this page in Turtl"
+	},
+
+	"commands": {
+		"_execute_browser_action": {
+			"suggested_key": {
+				"default": "Ctrl+Down"
+			}
+		}
+	}
+}
