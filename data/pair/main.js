@@ -2,7 +2,7 @@ var app	=	chrome.extension.getBackgroundPage();
 
 function switch_tab(classname)
 {
-	var main	=	document.getElementById('main');
+	var main	=	$('main');
 	if(!main) return false;
 
 	main.className	=	classname;
@@ -10,10 +10,10 @@ function switch_tab(classname)
 
 function set_error(msg, code)
 {
-	var el_code	=	document.getElementById('errcode');
-	var el_msg	=	document.getElementById('errmsg');
-	if(el_code) el_code.innerHTML = code + '';
-	if(el_msg) el_msg.innerHTML = msg;
+	var el_code	=	$('errcode');
+	var el_msg	=	$('errmsg');
+	if(el_code) el_code.set('html', code + '');
+	if(el_msg) el_msg.set('html', msg);
 }
 
 function init()
@@ -28,8 +28,8 @@ function init()
 		app.ext.pairing.do_bookmark();
 	}
 
-	var form	=	document.getElementById('form_code');
-	var inp		=	document.getElementById('inp_code');
+	var form	=	$('form_code');
+	var inp		=	$('inp_code');
 	if(form && inp)
 	{
 		var val_set		=	false;
@@ -44,14 +44,14 @@ function init()
 			}, 0);
 		};
 
-		form.addEventListener('submit', function(e) {
+		form.addEvent('submit', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
 
 			onchange();
 		}, false);
-		inp.addEventListener('change', onchange, false);
-		inp.addEventListener('paste', onchange, false);
+		inp.addEvent('change', onchange, false);
+		inp.addEvent('paste', onchange, false);
 	}
 }
 init();
