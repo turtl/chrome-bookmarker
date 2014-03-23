@@ -54,5 +54,5 @@ function init()
 		inp.addEvent('paste', onchange, false);
 	}
 }
-init();
+window.addEvent('domready', init);
 
