@@ -19,8 +19,8 @@ ext.pairing	=	{
 		ext.comm.send('ping', 'hai', {
 			success: function(res) {
 				// finally, complete the action we set out to do
-				ext.main.bookmark();
-				if(popup) popup.close();
+				ext.pairing.do_bookmark();
+				if(popup) popup.switch_tab('load');
 			},
 			error: function(err, code) {
 				console.error('pair: ping: ', err, code);
