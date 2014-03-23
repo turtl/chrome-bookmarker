@@ -45,9 +45,7 @@ function init()
 		};
 
 		form.addEvent('submit', function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-
+			s.stop();
 			onchange();
 		}, false);
 		inp.addEvent('change', onchange, false);
