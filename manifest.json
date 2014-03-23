@@ -16,23 +16,22 @@
 		"https://*/*"
 	],
 
-	"content_scripts": [{
-		"matches": ["<all_urls>"],
-		"js": [ "data/bookmark.scrape.js" ]
-	}],
-
 	"background": {
 		"scripts": [
 			"util.js",
-			"main.js",
 			"comm.js",
-			"bookmark.js"
-		],
-		"persistent": false
+			"pairing.js",
+			"bookmark.js",
+			"main.js",
+			"data/mootools-core-1.4.5.js",
+			"data/sjcl.js",
+			"data/tcrypt.js"
+		]
 	},
 
 	"browser_action": {
 		"default_icon": "data/images/favicon.19.png",
+		"default_popup": "data/pair/index.html",
 		"default_title": "Bookmark this page in Turtl"
 	},
 

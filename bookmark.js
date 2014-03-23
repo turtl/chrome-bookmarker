@@ -74,13 +74,12 @@ ext.bookmarker	=	{
 					}
 					else
 					{
-						console.log('port: send');
-						var port	=	chrome.tabs.connect(tabs[0].id, {name: 'bookmarker'});
-						port.postMessage({cmd: 'bookmark'})
-						port.onMessage.addListener(function(response) {
-							console.log('port: recv');
-							if(response.type != 'bookmark-scrape') return false;
-							setTimeout(function() { do_bookmark(response.data); }, 0);
+						chrome.tabs.executeScript(tab.id, {file: 'data/bookmark.scrape.js'});
+						chrome.runtime.onMessage.addListener(function(request, sender) {
+							if(request.type != 'bookmark-scrape') return false;
+							chrome.runtime.onMessage.removeListener(arguments.callee);
+							setTimeout(function() { do_bookmark(request.data); }, 0);
+							return false;
 						});
 					}
 				});

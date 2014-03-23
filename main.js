@@ -4,45 +4,16 @@
  * addon load themselves into. This gives the extension a single namespace for
  * all its libraries.
  */
-var ext	=	{
-	// holds "install" "upgrade" "downgrade" "open"
-	load_reason: false,
-
+ext.main	=	{
 	/**
-	 * Called on extension init. Initializes any listeners for the "clean slate"
-	 * addon state.
+	 * Called on extension init.
 	 */
 	setup: function()
 	{
-		// TODO: setup pairing interface
-	},
-
-	/**
-	 * run the bookmarker
-	 */
-	bookmark: function()
-	{
-		ext.bookmarker.scrape({
-			complete: function(data) {
-				ext.comm.send('bookmark', data, {
-					success: function(res) {
-						console.log('res: ', res);
-					},
-					error: function(err) {
-						console.error('error bookmarking: ', err);
-					}
-				});
-			}
-		});
 	}
 };
 
-ext.setup();
-
-// listen for commands!
-chrome.browserAction.onClicked.addListener(function() {
-	ext.bookmark();
-});
+ext.main.setup();
 
 // determine what kind of run we're doing
 var cur_version		=	chrome.app.getDetails().version;

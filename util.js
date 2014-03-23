@@ -1,4 +1,9 @@
 /**
+ * Our main namespace
+ */
+var ext	=	{load_reason: null};
+
+/**
  * Compare two version strings. If v1 > v2, return 1, if v2 > v1 return -1,
  * if they are the same return 0
  */
