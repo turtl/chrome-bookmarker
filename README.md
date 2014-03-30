@@ -1,21 +1,13 @@
-Turtl for Chrome
-================
-This houses the source code for the Turtl Chrome extension.
+Turtl Chrome bookmarker
+=======================
 
-Setup
------
-Create a symlink from `data/app/` -> `/path/to/turtl-js`.
+The Chrome bookmarker provides an easy-to-use interface to bookmark websites
+via Turtl. It requires the Turtl desktop app to be running, which it talks to
+via the desktop's [HTTP server](https://turtl.it/docs/clients/desktop/index#http-server)
+to send it info about the current page.
 
-Packaging
----------
-To build/package the extension, just run the `package` script from the root
-directory:
+Please see the [extension documentation](https://turtl.it/docs/clients/extensions/index).
 
-```bash
-cd /path/to/turtl/firefox
-./scripts/package
-```
-
-This builds an xpi file in the `release/` directory.
-
+Note that this project supercedes the original Chrome extension, which ran
+a Turtl client in Chrome itself.
 
