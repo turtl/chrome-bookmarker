@@ -13,6 +13,9 @@ ext.main	=	{
 	}
 };
 
+// vivaldi hack
+var is_background = true;
+
 ext.main.setup();
 
 // determine what kind of run we're doing

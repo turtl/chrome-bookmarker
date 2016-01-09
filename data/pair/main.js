@@ -1,5 +1,8 @@
 var app	=	chrome.extension.getBackgroundPage();
 
+// vivaldi hack
+var is_popup = true;
+
 function switch_tab(classname)
 {
 	var main	=	$('main');

@@ -1,9 +1,21 @@
+var get_popup = function()
+{
+	var popup = chrome.extension.getViews({type: 'popup'})[0];
+	if(popup) return popup;
+
+	// vivaldi hax
+	var windows = chrome.extension.getViews();
+	return windows
+		.filter(function(win) { return win.is_popup; })[0];
+};
+
 ext.pairing	=	{
 	start: function()
 	{
-		var popup	=	chrome.extension.getViews({type: 'popup'})[0];
+		var popup = get_popup();
 		ext.comm.send('pair', null, {
 			success: function(res) {
+				console.log('success!', popup);
 				if(popup) popup.switch_tab('pair');
 			},
 			error: function(err, code) {
@@ -15,7 +27,7 @@ ext.pairing	=	{
 
 	finish: function()
 	{
-		var popup	=	chrome.extension.getViews({type: 'popup'})[0];
+		var popup = get_popup();
 		ext.comm.send('ping', 'hai', {
 			success: function(res) {
 				// finally, complete the action we set out to do
@@ -49,7 +61,7 @@ ext.pairing	=	{
 
 	show_error: function(err, code)
 	{
-		var popup	=	chrome.extension.getViews({type: 'popup'})[0];
+		var popup = get_popup();
 		if(code == -1)
 		{
 			if(popup) popup.switch_tab('connect_error');
@@ -66,7 +78,7 @@ ext.pairing	=	{
 
 	close: function()
 	{
-		var popup	=	chrome.extension.getViews({type: 'popup'})[0];
+		var popup = get_popup();
 		if(!popup) return false;
 		popup.close();
 	},
